@@ -4,13 +4,7 @@
 import time
 import board
 import adafruit_scd4x
-from prometheus_client import Gauge, generate_latest, CollectorRegistry
-from flask import Flask, Response
-
-# Create Prometheus metrics
-co2_gauge = Gauge('co2_ppm', 'CO2 concentration in ppm')
-temperature_gauge = Gauge('temperature_celsius', 'Temperature in Celsius')
-humidity_gauge = Gauge('relative_humidity_percentage', 'Relative Humidity in percentage')
+from flask import Flask, jsonify
 
 i2c = board.I2C()  # uses board.SCL and board.SDA
 # i2c = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a microcontroller
@@ -22,18 +16,21 @@ print("Waiting for first measurement....")
 
 app = Flask(__name__)
 
-@app.route('/metrics')
-def prometheus_metrics():
-    registry = CollectorRegistry()
-    co2_value = scd4x.CO2
-    temperature_value = scd4x.temperature
-    humidity_value = scd4x.relative_humidity
-    print("CO2: %d ppm" % scd4x.CO2)
-    co2_gauge.set(co2_value)
-    temperature_gauge.set(temperature_value)
-    humidity_gauge.set(humidity_value)
+@app.route('/sensor-data', methods=['GET'])
+def get_sensor_data():
+    if scd4x.data_ready:
+        co2_value = scd4x.CO2
+        temperature_value = scd4x.temperature
+        humidity_value = scd4x.relative_humidity
 
-    return Response(generate_latest(registry), content_type='application/json')
+        data = {
+            'co2_ppm': co2_value,
+            'temperature_celsius': temperature_value,
+            'relative_humidity_percentage': humidity_value
+        }
+        return jsonify(data)
+    else:
+        return jsonify({'error': 'Sensor data not ready'}), 503
 
 if __name__ == '__main__':
     # Start the Flask app on port 5000
