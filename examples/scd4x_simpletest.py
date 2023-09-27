@@ -28,7 +28,7 @@ def prometheus_metrics():
     co2_value = scd4x.CO2
     temperature_value = scd4x.temperature
     humidity_value = scd4x.relative_humidity
-
+    print("CO2: %d ppm" % scd4x.CO2)
     co2_gauge.set(co2_value)
     temperature_gauge.set(temperature_value)
     humidity_gauge.set(humidity_value)
