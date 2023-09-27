@@ -4,7 +4,8 @@
 import time
 import board
 import adafruit_scd4x
-from prometheus_client import start_http_server, Gauge
+from prometheus_client import Gauge, generate_latest, CollectorRegistry
+from flask import Flask, Response
 
 # Create Prometheus metrics
 co2_gauge = Gauge('co2_ppm', 'CO2 concentration in ppm')
@@ -19,21 +20,21 @@ print("Serial number:", [hex(i) for i in scd4x.serial_number])
 scd4x.start_periodic_measurement()
 print("Waiting for first measurement....")
 
-# Start Prometheus HTTP server on port 8000
-start_http_server(8181)
+app = Flask(__name__)
 
-while True:
-    if scd4x.data_ready:
-        co2_value = scd4x.CO2
-        temperature_value = scd4x.temperature
-        humidity_value = scd4x.relative_humidity
+@app.route('/metrics')
+def prometheus_metrics():
+    registry = CollectorRegistry()
+    co2_value = scd4x.CO2
+    temperature_value = scd4x.temperature
+    humidity_value = scd4x.relative_humidity
 
-        co2_gauge.set(co2_value)
-        temperature_gauge.set(temperature_value)
-        humidity_gauge.set(humidity_value)
+    co2_gauge.set(co2_value)
+    temperature_gauge.set(temperature_value)
+    humidity_gauge.set(humidity_value)
 
-        print("CO2: %d ppm" % co2_value)
-        print("Temperature: %0.1f *C" % temperature_value)
-        print("Humidity: %0.1f %%" % humidity_value)
-        print()
-    time.sleep(1)
+    return Response(generate_latest(registry), content_type='text/plain')
+
+if __name__ == '__main__':
+    # Start the Flask app on port 5000
+    app.run(host='0.0.0.0', port=5000)
