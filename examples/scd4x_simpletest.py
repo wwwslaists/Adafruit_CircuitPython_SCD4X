@@ -20,7 +20,7 @@ scd4x.start_periodic_measurement()
 print("Waiting for first measurement....")
 
 # Start Prometheus HTTP server on port 8000
-start_http_server(8000)
+start_http_server(8181)
 
 while True:
     if scd4x.data_ready:
