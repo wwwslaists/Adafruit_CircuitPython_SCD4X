@@ -33,7 +33,7 @@ def prometheus_metrics():
     temperature_gauge.set(temperature_value)
     humidity_gauge.set(humidity_value)
 
-    return Response(generate_latest(registry), content_type='text/plain')
+    return Response(generate_latest(registry), content_type='application/json')
 
 if __name__ == '__main__':
     # Start the Flask app on port 5000
