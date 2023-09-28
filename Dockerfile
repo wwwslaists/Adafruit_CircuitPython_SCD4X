@@ -11,4 +11,4 @@ COPY examples/ /app
 
 EXPOSE 5000
 
-ENTRYPOINT ["python3", "-u", "test.py"]
+ENTRYPOINT ["python3", "-u", "main.py"]

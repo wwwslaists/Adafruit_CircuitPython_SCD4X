@@ -1,5 +1,8 @@
 sudo docker build -t i2c-base .
-sudo docker run -p 5000:5000 i2c-base:latest
+sudo docker run -p 5000:5000 -d  --device /dev/i2c-1 i2c-base:latest
+
+
+https://github.com/Sensirion/raspberry-pi-i2c-scd4x
 
 Introduction
 ============
