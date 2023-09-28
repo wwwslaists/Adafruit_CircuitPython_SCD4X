@@ -4,6 +4,7 @@
 import time
 import board
 import adafruit_scd4x
+from datetime import datetime
 
 i2c = board.I2C()  # uses board.SCL and board.SDA
 # i2c = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a microcontroller
@@ -41,13 +42,23 @@ print("Altitude:", scd4x.altitude, "meters above sea level")
 
 print("")
 
+
+
+
 scd4x.start_periodic_measurement()
 print("Waiting for first measurement....")
 
 while True:
     if scd4x.data_ready:
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        print("Current Time =", current_time)
         print("CO2: %d ppm" % scd4x.CO2)
         print("Temperature: %0.1f *C" % scd4x.temperature)
         print("Humidity: %0.1f %%" % scd4x.relative_humidity)
         print()
     time.sleep(1)
+
+
+
+

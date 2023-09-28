@@ -11,7 +11,7 @@ print("Serial number:", [hex(i) for i in scd4x.serial_number])
 
 scd4x.start_periodic_measurement()
 print("Waiting for first measurement....")
-
+time.sleep(5.4)
 app = Flask(__name__)
 
 # Create Prometheus metrics
@@ -50,4 +50,4 @@ def prometheus_metrics():
 
 if __name__ == '__main__':
     # Start the Flask app on port 5000
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5001)
