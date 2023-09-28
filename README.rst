@@ -1,3 +1,6 @@
+sudo docker build -t i2c-base .
+sudo docker run -p 5000:5000 i2c-base:latest
+
 Introduction
 ============
 
