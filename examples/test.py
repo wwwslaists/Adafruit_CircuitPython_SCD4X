@@ -1,5 +1,4 @@
-from prometheus_client import start_http_server, Gauge, Counter
-import random
+from prometheus_client import start_http_server, Gauge
 import time
 import board
 import adafruit_scd4x
