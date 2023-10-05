@@ -24,7 +24,8 @@
 
 # CircuitPython-specific files
 *.mpy
-
+grafana-agent.yaml
+prometheus.yml
 # Python-specific files
 __pycache__
 *.pyc
